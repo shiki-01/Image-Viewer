@@ -1,0 +1,20 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // デフォルトで読み書きを禁止
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // uidが一致している場合は、users/uid/の中に書き込み・読み取りを行える
+    match /users/{user_id}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == user_id;
+    }
+
+    // アクセス時にuidがない場合はusersへの書き込み許可をする
+    match /users/{user_id} {
+      allow create: if request.auth != null;
+    }
+  }
+}
