@@ -1,0 +1,11 @@
+<project version="4">
+    <component name="SvelteSettings">
+        <option name="compilerWarnings">
+            <map>
+                <entry key="a11y-click-events-have-key-events" value="ignore" />
+                <entry key="a11y-mouse-events-have-key-events" value="ignore" />
+                <entry key="a11y-missing-role" value="ignore" />
+            </map>
+        </option>
+    </component>
+</project>

@@ -4,7 +4,7 @@
     import { addImages, writeUrlsToStore } from "$lib";
     import { auth } from '$lib/firebase';
     import { onAuthStateChanged } from 'firebase/auth';
-    import { authStore, isReady, isEditing } from '$lib/store';
+    import { authStore, isReady, isEditing, isLiked, isTags } from '$lib/store';
     import { Button } from "$lib/components/ui/button";
     import { Toaster } from "$lib/components/ui/sonner";
     import { toast } from "svelte-sonner";
@@ -14,6 +14,7 @@
     import Icon from '@iconify/svelte';
     import { mode, ModeWatcher, resetMode, setMode } from "mode-watcher";
     import "@fontsource/rajdhani";
+    import { setCookie } from '$lib/cookies';
 
     let theme: string | undefined = undefined;
 
@@ -98,7 +99,7 @@
             </DropdownMenu.Trigger>
             <DropdownMenu.Content class="t-0">
                 <DropdownMenu.Group>
-                    <DropdownMenu.Label>Setting</DropdownMenu.Label>
+                    <DropdownMenu.Label>Actions</DropdownMenu.Label>
                     <DropdownMenu.Item class="flex items-center space-x-2" on:click={() => {isAddImages = true}}>
                         <Icon icon="mdi:add" width="18" height="18"/>
                         <span>Add Images</span>
@@ -108,6 +109,38 @@
                         <span>Edit</span>
                     </DropdownMenu.Item>
                     <DropdownMenu.Separator/>
+                    <DropdownMenu.Sub>
+                        <DropdownMenu.SubTrigger class="flex items-center space-x-2">
+                            <Icon icon="mdi:eye" width="18" height="18"/>
+                            <span>View</span>
+                        </DropdownMenu.SubTrigger>
+                        <DropdownMenu.SubContent>
+                            <DropdownMenu.CheckboxItem
+                              bind:checked={$isLiked}
+                              class="flex items-center space-x-2"
+                              on:click={() => {
+                                  isLiked.subscribe(value => {
+                                      setCookie('isLiked', value.toString(), 7);
+                                  });
+                              }}
+                            >
+                                <Icon icon="mdi:star" width="18" height="18"/>
+                                <span>Liked</span>
+                            </DropdownMenu.CheckboxItem>
+                            <DropdownMenu.CheckboxItem
+                              bind:checked={$isTags}
+                              class="flex items-center space-x-2"
+                              on:click={() => {
+                                  isTags.subscribe(value => {
+                                      setCookie('isTags', value.toString(), 7);
+                                  });
+                              }}
+                            >
+                                <Icon icon="mdi:tag" width="18" height="18"/>
+                                <span>Tags</span>
+                            </DropdownMenu.CheckboxItem>
+                        </DropdownMenu.SubContent>
+                    </DropdownMenu.Sub>
                     <DropdownMenu.Sub>
                         <DropdownMenu.SubTrigger class="flex items-center space-x-2">
                             <Icon icon="mdi:theme-light-dark" width="18" height="18"/>
